@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { nanoid } from 'nanoid';
 
@@ -7,16 +6,21 @@ import FormCreateContact from 'components/Forms/FormCreateContact';
 import FilterContacts from 'components/FilterContacts/FilterContacts';
 
 import bgImage from 'helper/image/telefon-bgc.jpg';
+import 'redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { createContact, deleteContact } from 'redux/contacts/slice';
+import { filterContact } from 'redux/filter/slice';
 
 const App = () => {
-  const [contacts, setContacts] = useState(
-    () => JSON.parse(localStorage.getItem('contacts')) ?? []
-  );
-  const [filter, setFilter] = useState('');
+  // const [contacts, setContacts] = useState(
+  //   () => JSON.parse(localStorage.getItem('contacts')) ?? []
+  // );
+  const contacts = useSelector(state => state.contacts);
+  const filter = useSelector(state => state.filter);
+  console.log(contacts);
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  const dispatch = useDispatch();
 
   const formSubmitHandler = data => {
     repeatControl(data);
@@ -33,7 +37,7 @@ const App = () => {
         nameArr => nameArr.name.toLowerCase() === newContact.name.toLowerCase()
       )
     ) {
-      setContacts(prevState => [nameArr, ...prevState]);
+      dispatch(createContact(nameArr));
     } else {
       Notify.info('The contact is already in the phone book!', {
         position: 'center-center',
@@ -43,16 +47,15 @@ const App = () => {
   };
 
   const deleteContactFromList = idContact => {
-    setContacts(prevState =>
-      prevState.filter(contact => contact.id !== idContact)
-    );
+    dispatch(deleteContact(idContact));
   };
 
   const filterContacts = event => {
-    setFilter(event.currentTarget.value);
+    dispatch(filterContact(event.currentTarget.value));
   };
 
-  const normalizedFilter = filter.toLocaleLowerCase();
+  const normalizedFilter = filter.toLowerCase();
+
   const filtredContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(normalizedFilter)
   );
