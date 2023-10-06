@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { nanoid } from 'nanoid';
 
@@ -8,15 +8,23 @@ import FilterContacts from 'components/FilterContacts/FilterContacts';
 
 import bgImage from 'helper/image/telefon-bgc.jpg';
 
-const App = () => {
-  const [contacts, setContacts] = useState(
-    () => JSON.parse(localStorage.getItem('contacts')) ?? []
-  );
-  const [filter, setFilter] = useState('');
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, deleteContact } from 'redux/contactsSlice';
+// import { getContacts, getFilter } from 'redux/helpers';
+import { updateFilter } from 'redux/filterSlice';
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+const App = () => {
+  // const [contacts, setContacts] = useState(
+  //   () => JSON.parse(localStorage.getItem('contacts')) ?? []
+  // );
+  // const [filter, setFilter] = useState('');
+
+  // useEffect(() => {
+  //   localStorage.setItem('contacts', JSON.stringify(contacts));
+  // }, [contacts]);
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts);
+  const filter = useSelector(state => state.filter);
 
   const formSubmitHandler = data => {
     repeatControl(data);
@@ -33,7 +41,8 @@ const App = () => {
         nameArr => nameArr.name.toLowerCase() === newContact.name.toLowerCase()
       )
     ) {
-      setContacts(prevState => [nameArr, ...prevState]);
+      // setContacts(prevState => [nameArr, ...prevState]);
+      dispatch(addContact(nameArr));
     } else {
       Notify.info('The contact is already in the phone book!', {
         position: 'center-center',
@@ -43,18 +52,20 @@ const App = () => {
   };
 
   const deleteContactFromList = idContact => {
-    setContacts(prevState =>
-      prevState.filter(contact => contact.id !== idContact)
-    );
+    // setContacts(prevState =>
+    //   prevState.filter(contact => contact.id !== idContact)
+    // );
+    dispatch(deleteContact(idContact));
   };
 
   const filterContacts = event => {
-    setFilter(event.currentTarget.value);
+    // setFilter(event.currentTarget.value);
+    dispatch(updateFilter(event.currentTarget.value));
   };
 
-  const normalizedFilter = filter.toLocaleLowerCase();
+  // const normalizedFilter = filter.toLocaleLowerCase();
   const filtredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(normalizedFilter)
+    contact.name.toLowerCase().includes(filter)
   );
 
   return (
