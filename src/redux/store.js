@@ -15,3 +15,13 @@
 // export const store = configureStore({ reducer: persistedReducer });
 
 // export const persistor = persistStore(store);
+import { configureStore } from '@reduxjs/toolkit';
+import { contactReducer } from './contacts/slice';
+import { filtersReducer } from './filter/slice';
+
+export const store = configureStore({
+  reducer: {
+    contacts: contactReducer,
+    filters: filtersReducer,
+  },
+});
