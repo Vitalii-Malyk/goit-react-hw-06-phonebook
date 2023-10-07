@@ -10,18 +10,10 @@ import bgImage from 'helper/image/telefon-bgc.jpg';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { addContact, deleteContact } from 'redux/contactsSlice';
-// import { getContacts, getFilter } from 'redux/helpers';
+
 import { updateFilter } from 'redux/filterSlice';
 
 const App = () => {
-  // const [contacts, setContacts] = useState(
-  //   () => JSON.parse(localStorage.getItem('contacts')) ?? []
-  // );
-  // const [filter, setFilter] = useState('');
-
-  // useEffect(() => {
-  //   localStorage.setItem('contacts', JSON.stringify(contacts));
-  // }, [contacts]);
   const dispatch = useDispatch();
   const contacts = useSelector(state => state.contacts);
   const filter = useSelector(state => state.filter);
@@ -41,7 +33,6 @@ const App = () => {
         nameArr => nameArr.name.toLowerCase() === newContact.name.toLowerCase()
       )
     ) {
-      // setContacts(prevState => [nameArr, ...prevState]);
       dispatch(addContact(nameArr));
     } else {
       Notify.info('The contact is already in the phone book!', {
@@ -52,18 +43,13 @@ const App = () => {
   };
 
   const deleteContactFromList = idContact => {
-    // setContacts(prevState =>
-    //   prevState.filter(contact => contact.id !== idContact)
-    // );
     dispatch(deleteContact(idContact));
   };
 
   const filterContacts = event => {
-    // setFilter(event.currentTarget.value);
     dispatch(updateFilter(event.currentTarget.value));
   };
 
-  // const normalizedFilter = filter.toLocaleLowerCase();
   const filtredContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filter)
   );
