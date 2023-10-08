@@ -1,16 +1,14 @@
 // import { useEffect, useState } from 'react';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { nanoid } from 'nanoid';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, deleteContact } from 'redux/contactsSlice';
 
 import CreateListContact from 'components/CreateListContact/CreateListContact';
 import FormCreateContact from 'components/Forms/FormCreateContact';
 import FilterContacts from 'components/FilterContacts/FilterContacts';
 
 import bgImage from 'helper/image/telefon-bgc.jpg';
-
-import { useDispatch, useSelector } from 'react-redux';
-import { addContact, deleteContact } from 'redux/contactsSlice';
-
 import { updateFilter } from 'redux/filterSlice';
 
 const App = () => {
