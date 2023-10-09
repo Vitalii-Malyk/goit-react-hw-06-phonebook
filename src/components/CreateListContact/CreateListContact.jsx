@@ -5,20 +5,31 @@ import {
   ItemElementStyle,
   ButtonElementStyle,
 } from 'components/CreateListContact/CreateListContact.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from 'redux/contactsSlice';
 
-const CreateListContact = ({ contact, deleted }) => {
-  const deleteId = Id => {
-    deleted(Id);
+const CreateListContact = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts);
+  const filter = useSelector(state => state.filter);
+
+  const deleteContactFromList = idContact => {
+    dispatch(deleteContact(idContact));
   };
 
+  const normalizedFilter = filter.toLocaleLowerCase();
+  const filtredContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(normalizedFilter)
+  );
+
   const createContactItem = () => {
-    return contact.map(contact => {
+    return filtredContacts.map(contact => {
       return (
         <ItemElementStyle key={nanoid()}>
           {`${contact.name} : ${contact.number}`}
           <ButtonElementStyle
             data-id={contact.id}
-            onClick={() => deleteId(contact.id)}
+            onClick={() => deleteContactFromList(contact.id)}
           >
             x
           </ButtonElementStyle>
